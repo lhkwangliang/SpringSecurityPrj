@@ -32,6 +32,16 @@
 		<artifactId>spring-webmvc</artifactId>
 		<version>3.0.3.RELEASE</version>
 	</dependency>
+	<dependency>
+		<groupId>jstl</groupId>
+		<artifactId>jstl</artifactId>
+		<version>1.1.2</version>
+	</dependency>
+	<dependency>
+		<groupId>taglibs</groupId>
+		<artifactId>standard</artifactId>
+		<version>1.1.2</version>
+	</dependency>
 ```
 	
 2.web.xml配置
@@ -75,7 +85,9 @@ id="WebApp_ID" version="2.5">
         http://www.springframework.org/schema/security/spring-security-3.0.xsd">
     <!-- 自动配置模式，拦截所有请求，有ROLE_USER才可以通过 -->
     <http auto-config="true">
+        <intercept-url pattern="/login.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/**" access="ROLE_USER"/>
+        <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/> 
     </http>
     <!-- 认证管理器。用户名密码都集成在配置文件中 --> 
     <authentication-manager>
@@ -85,6 +97,11 @@ id="WebApp_ID" version="2.5">
             </user-service>
         </authentication-provider>
     </authentication-manager>
+    <!-- 指定中文资源 。默认命名空间是security,所以要加前缀beans: --> 
+     <beans:bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename"  value="classpath:org/springframework/security/messages_zh_CN"/>  
+     </beans:bean>
 </beans:beans>
 ```
 4.登录成功后返回到index.jsp页面
@@ -101,7 +118,53 @@ id="WebApp_ID" version="2.5">
 </body>
 </html>
 ```
-5.配置完成。
+5.登录页面login.jsp
+```
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户登录</title>
+</head>
+<body onLoad="document.f.j_username.focus();">
+<c:if test="${not empty param.login_error}">
+    <font color="red">
+        登录失败，请重试.<br/><br/>
+        原因:<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>
+    </font>
+</c:if>
+<form name="f" action="<c:url value='j_spring_security_check'/>" method="POST">
+    <table>
+        <tr>
+            <td>用户名:</td>
+            <td>
+                <input type='text' name='j_username' value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'/>
+            </td>
+        </tr>
+        <tr>
+            <td>密     码:</td>
+            <td><input type='password' name='j_password'></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="checkbox" name="_spring_security_remember_me"></td><td>两周内自动登录
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2' align="center">
+                <input name="submit" type="submit">  
+                <input name="reset" type="reset">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
+```
+6.配置完成。
 
 
 #三、Test
