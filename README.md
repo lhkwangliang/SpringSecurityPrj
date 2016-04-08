@@ -172,7 +172,7 @@ id="WebApp_ID" version="2.5">
 在浏览器地址栏里输入下面的url：
 http://localhost:8080/SpringSecurityPrj/
 
-会跳转到SpringSecurity内置的登录页面，输入用户名liangw和密码liangw，页面跳转到index.jsp，登录成功
+会跳转到自定义的登录页面，输入用户名liangw和密码liangw，页面跳转到index.jsp，登录成功
 (注意：此处的用户名和密码在applicationContext-security.xml配置文件里面有配置，
 <user name="liangw" password="liangw" authorities="ROLE_USER"/>)
 
