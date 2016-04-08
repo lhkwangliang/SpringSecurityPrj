@@ -86,6 +86,8 @@ id="WebApp_ID" version="2.5">
     <!-- 自动配置模式，拦截所有请求，有ROLE_USER才可以通过 -->
     <http auto-config="true">
         <intercept-url pattern="/login.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <!-- 增加 ROLE_ADMIN角色-->
+        <intercept-url pattern="/admin.jsp" access="ROLE_ADMIN"/>
         <intercept-url pattern="/**" access="ROLE_USER"/>
         <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/> 
     </http>
@@ -93,6 +95,8 @@ id="WebApp_ID" version="2.5">
     <authentication-manager>
         <authentication-provider>
             <user-service>
+                <!-- 添加ROLE_ADMIN角色 -->
+                <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN"/>
                 <user name="liangw" password="liangw" authorities="ROLE_USER"/>
             </user-service>
         </authentication-provider>
@@ -115,6 +119,8 @@ id="WebApp_ID" version="2.5">
 </head>
 <body>
 <h2>登陆成功！</h2>
+<br/>
+<a href="admin.jsp">管理页面</a>
 </body>
 </html>
 ```
@@ -164,16 +170,35 @@ id="WebApp_ID" version="2.5">
 </body>
 </html>
 ```
-6.配置完成。
+6.增加admin.jsp页面
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin 管理界面</title>
+</head>
+<body>
+<p style="color:red">admin.jsp页面</p>
+</body>
+</html>
+```
+7.配置完成。
 
 
 #三、Test
 
-在浏览器地址栏里输入下面的url：
+1.在浏览器地址栏里输入下面的url：
 http://localhost:8080/SpringSecurityPrj/
 
-会跳转到自定义的登录页面，输入用户名liangw和密码liangw，页面跳转到index.jsp，登录成功
+2.会跳转到自定义的登录页面，输入用户名liangw和密码liangw，页面跳转到index.jsp，登录成功
 (注意：此处的用户名和密码在applicationContext-security.xml配置文件里面有配置，
 <user name="liangw" password="liangw" authorities="ROLE_USER"/>)
+
+3.点击index.jsp页面中的“管理页面”超链接，显示403不允许访问错误提示。
+
+4.改用用户名admin密码admin登录，成功后，点击index.jsp页面中的“管理页面”超链接，成功跳转到admin。jsp页面
 
 如果用户名名或密码输入错误，直接显示错误信息，不会跳转到index.jsp页面

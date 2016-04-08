@@ -9,6 +9,8 @@
     <!-- 自动配置模式，拦截所有请求，有ROLE_USER才可以通过 -->
     <http auto-config="true">
         <intercept-url pattern="/login.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <!-- 增加 ROLE_ADMIN角色-->
+        <intercept-url pattern="/admin.jsp" access="ROLE_ADMIN"/>
         <intercept-url pattern="/**" access="ROLE_USER"/>
         <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/> 
     </http>
@@ -16,6 +18,8 @@
     <authentication-manager>
         <authentication-provider>
             <user-service>
+                <!-- 添加ROLE_ADMIN角色 -->
+                <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN"/>
                 <user name="liangw" password="liangw" authorities="ROLE_USER"/>
             </user-service>
         </authentication-provider>

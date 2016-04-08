@@ -7,5 +7,7 @@
 </head>
 <body>
 <h2>登陆成功！</h2>
+<br/>
+<a href="admin.jsp">管理页面</a>
 </body>
 </html>
