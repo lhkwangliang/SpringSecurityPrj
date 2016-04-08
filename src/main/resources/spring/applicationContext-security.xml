@@ -8,7 +8,9 @@
         http://www.springframework.org/schema/security/spring-security-3.0.xsd">
     <!-- 自动配置模式，拦截所有请求，有ROLE_USER才可以通过 -->
     <http auto-config="true">
+        <intercept-url pattern="/login.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/**" access="ROLE_USER"/>
+        <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/> 
     </http>
     <!-- 认证管理器。用户名密码都集成在配置文件中 --> 
     <authentication-manager>
@@ -18,4 +20,9 @@
             </user-service>
         </authentication-provider>
     </authentication-manager>
+    <!-- 指定中文资源 。默认命名空间是security,所以要加前缀beans: --> 
+     <beans:bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename"  value="classpath:org/springframework/security/messages_zh_CN"/>  
+     </beans:bean>
 </beans:beans>
