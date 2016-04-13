@@ -9,9 +9,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.wl.dao.OuthoritiesDao;
+import com.wl.dao.CalendarRoleDao;
 
-public class OuthoritiesDaoImpl implements OuthoritiesDao {
+public class CalendarRoleDaoImpl implements CalendarRoleDao {
 
 	private JdbcTemplate jdbcTemplate;
 

@@ -31,7 +31,7 @@ insert into authorities(username,authority) values('admin','ROLE_USER');
 insert into authorities(username,authority) values('liangw','ROLE_USER');
 
 
---------自定义用户表----------
+--------自定义用户表、角色表----------
 
 CREATE TABLE calendar_user(
 id NUMERIC PRIMARY KEY,
@@ -41,7 +41,11 @@ firstname VARCHAR(64),
 lastname VARCHAR(64)
 );
 
-INSERT INTO calendar_user VALUES(1,'liangw@bti.cn','123','Liang','Wang');
---INSERT INTO users VALUES('liangw@bti.cn','123',1);
-INSERT INTO AUTHORITIES VALUES('liangw@bti.cn','ROLE_USER');
-INSERT INTO AUTHORITIES VALUES('liangw@bti.cn','ROLE_ADMIN');
+CREATE TABLE calendar_role(
+email VARCHAR(64) NOT NULL,
+authority VARCHAR(64) NOT NULL
+);
+
+INSERT INTO calendar_user VALUES(48323,'liangw@bti.cn','388304caed4e99089aa3a9dbe21a1888','Liang','Wang'); -- 密码为123
+INSERT INTO calendar_role(email, authority) VALUES('liangw@bti.cn','ROLE_USER');
+INSERT INTO calendar_role(email, authority) VALUES('liangw@bti.cn','ROLE_ADMIN');
