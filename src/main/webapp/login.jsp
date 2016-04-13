@@ -1,4 +1,4 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -19,7 +19,8 @@
         <tr>
             <td>用户名:</td>
             <td>
-                <input type='text' name='j_username' value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'/>
+                <input type='text' name='j_username' 
+                value='<c:if test="${not empty param.login_error}"><c:out escapeXml="false" value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'/>
             </td>
         </tr>
         <tr>
@@ -33,8 +34,8 @@
         </tr>
         <tr>
             <td colspan='2' align="center">
-                <input name="submit" type="submit">  
-                <input name="reset" type="reset">
+                <input name="submit" type="submit" value="登录">
+                <a href="register.jsp">注册</a>
             </td>
         </tr>
     </table>
