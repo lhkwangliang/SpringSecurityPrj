@@ -29,3 +29,19 @@ insert into users(username,password,enabled) values('liangw','liangw',1);
 insert into authorities(username,authority) values('admin','ROLE_ADMIN');
 insert into authorities(username,authority) values('admin','ROLE_USER');
 insert into authorities(username,authority) values('liangw','ROLE_USER');
+
+
+--------自定义用户表----------
+
+CREATE TABLE calendar_user(
+id NUMERIC PRIMARY KEY,
+email VARCHAR(64) NOT NULL,
+`password` VARCHAR(64),
+firstname VARCHAR(64),
+lastname VARCHAR(64)
+);
+
+INSERT INTO calendar_user VALUES(1,'liangw@bti.cn','123','Liang','Wang');
+--INSERT INTO users VALUES('liangw@bti.cn','123',1);
+INSERT INTO AUTHORITIES VALUES('liangw@bti.cn','ROLE_USER');
+INSERT INTO AUTHORITIES VALUES('liangw@bti.cn','ROLE_ADMIN');

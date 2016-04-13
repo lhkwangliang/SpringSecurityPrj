@@ -5,11 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin 管理界面</title>
+<title>主页</title>
 </head>
 <body>
 	<c:url value="/logout" var="logoutUrl"/>
 	<li><a href="${logoutUrl}">Log Out</a></li>
-	<p style="color:red">admin.jsp页面</p>
+	<div align="center">
+		<h1>主页面</h1>
+	</div>
 </body>
 </html>
