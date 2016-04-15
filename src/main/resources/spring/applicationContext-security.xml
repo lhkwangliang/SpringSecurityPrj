@@ -12,7 +12,7 @@
 	
     
     <http auto-config="true">
-        <intercept-url pattern="/index.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/j_spring_security_check"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/login.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/register.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/reg*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
