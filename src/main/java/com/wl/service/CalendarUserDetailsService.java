@@ -1,7 +1,6 @@
 package com.wl.service;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +11,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.wl.dao.CalendarUserDao;
-import com.wl.dao.OuthoritiesDao;
+import com.wl.dao.CalendarRoleDao;
 import com.wl.entity.CalendarUser;
 import com.wl.utils.CalendarUserAuthorityUtils;
+import com.wl.utils.MD5Util;
 
 public class CalendarUserDetailsService implements UserDetailsService {
 
 	private CalendarUserDao calendarUserDao;
 	
-	private OuthoritiesDao outhoritiesDao;
+	private CalendarRoleDao calendarRoleDao;
 	
 	@Autowired
 	public void setCalendarUserDao(CalendarUserDao calendarUserDao) {
@@ -28,8 +28,8 @@ public class CalendarUserDetailsService implements UserDetailsService {
 	}
 
 	@Autowired
-	public void setOuthoritiesDao(OuthoritiesDao outhoritiesDao) {
-		this.outhoritiesDao = outhoritiesDao;
+	public void setCalendarRoleDao(CalendarRoleDao calendarRoleDao) {
+		this.calendarRoleDao = calendarRoleDao;
 	}
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
@@ -37,55 +37,70 @@ public class CalendarUserDetailsService implements UserDetailsService {
 		if (user == null) {
             throw new UsernameNotFoundException("找不到用户");
         } else {
-        	List<String> list = outhoritiesDao.getListByUserName(user.getEmail());
+        	String salt = user.getEmail();
+        	List<String> list = calendarRoleDao.getListByUserName(user.getEmail());
         	String[] array = new String[list.size()];
         	for (int i=0;i<list.size();i++) {
 				String string = list.get(i);
 				array[i] = string;
 			}
-            return new CalendarUserDetails(user, array);
+            return new CalendarUserDetails(user, salt, array);
         }
 	}
 	
 	public boolean registerUser(CalendarUser user) {
 		CalendarUser u = calendarUserDao.findUserByEmail(user.getEmail());
 		if(u == null) {
+			user.setPassword(MD5Util.MD5WithSalt(user.getPassword(), user.getEmail()));
 			return calendarUserDao.insert(user);
 		}else{
 			return false;
 		}
 	}
 	
-	private final class CalendarUserDetails extends CalendarUser implements UserDetails {  
+	public class CalendarUserDetails extends CalendarUser implements UserDetails {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private String[] array;
+		private String salt;
 		
-        CalendarUserDetails(CalendarUser user, String[] array) {  
-            setId(user.getId());  
-            setEmail(user.getEmail());  
-            setFirstName(user.getFirstName());  
-            setLastName(user.getLastName());  
-            setPassword(user.getPassword());  
+        CalendarUserDetails(CalendarUser user, String salt, String[] array) {
+            setId(user.getId());
+            setEmail(user.getEmail());
+            setFirstName(user.getFirstName());
+            setLastName(user.getLastName());
+            setPassword(user.getPassword());
+            setSalt(salt);
             
             this.array = array;
         }
         public Collection<GrantedAuthority> getAuthorities() {
-            return CalendarUserAuthorityUtils.createAuthorities(this, array);  
+            return CalendarUserAuthorityUtils.createAuthorities(this, array);
         }
-        public String getUsername() {  
-            return getEmail();  
-        }  
-        public boolean isAccountNonExpired() {  
-            return true;  
-        }  
-        public boolean isAccountNonLocked() {  
-            return true;  
-        }  
-        public boolean isCredentialsNonExpired() {  
-            return true;  
-        }  
-        public boolean isEnabled() {  
-            return true;  
-        }  
+        public String getUsername() {
+            return getEmail();
+        }
+        public boolean isAccountNonExpired() {
+            return true;
+        }
+        public boolean isAccountNonLocked() {
+            return true;
+        }
+        public boolean isCredentialsNonExpired() {
+            return true;
+        }
+        public boolean isEnabled() {
+            return true;
+        }
+		public String getSalt() {
+			return salt;
+		}
+		public void setSalt(String salt) {
+			this.salt = salt;
+		}
+        
     }
 
 }

@@ -12,7 +12,7 @@
 	
     
     <http auto-config="true">
-        <intercept-url pattern="/index.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/j_spring_security_check"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/login.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/register.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/reg*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
@@ -32,19 +32,26 @@
     </authentication-manager -->
     
     <authentication-manager>
-	    <authentication-provider user-service-ref="calendarUserDetailsService"/>
+	    <authentication-provider user-service-ref="calendarUserDetailsService">
+	        <password-encoder ref="myPasswordEncode">
+	            <salt-source user-property="salt"/>
+	        </password-encoder>
+	    </authentication-provider>
 	</authentication-manager>
+	<beans:bean id="myPasswordEncode" class="com.wl.security.MyPasswordEncode">
+	    <beans:constructor-arg name="algorithm" value="md5"/>
+	</beans:bean>
 	<beans:bean id="calendarUserDetailsService"
 	    class="com.wl.service.CalendarUserDetailsService">
 	    <beans:property name="calendarUserDao" ref="calendarUserDao"/>
-	    <beans:property name="outhoritiesDao" ref="outhoritiesDao"/>
+	    <beans:property name="calendarRoleDao" ref="calendarRoleDao"/>
 	</beans:bean>
 	<beans:bean id="calendarUserDao"
 	    class="com.wl.dao.impl.CalendarUserDaoImpl">
 	    <beans:property name="jdbcTemplate" ref="jdbcTemplate"></beans:property>
 	</beans:bean>
-	<beans:bean id="outhoritiesDao"
-	    class="com.wl.dao.impl.OuthoritiesDaoImpl">
+	<beans:bean id="calendarRoleDao"
+	    class="com.wl.dao.impl.CalendarRoleDaoImpl">
 	    <beans:property name="jdbcTemplate" ref="jdbcTemplate"></beans:property>
 	</beans:bean>
 	<beans:bean id="jdbcTemplate" 
